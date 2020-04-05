@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security.xsd">
+
+        <http auto-config="true">
+
+        <intercept-url pattern="/branch/**" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/customer/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
+            <!--<csrf disabled="true"/>-->
+
+
+    </http>
+
+
+    <authentication-manager>
+        <authentication-provider>
+            <jdbc-user-service data-source-ref="dataBase"
+                               users-by-username-query=
+                                       "select username,password, enabled from user where username=?"
+                               authorities-by-username-query=
+                                       "select username, role from user_roles where username =?  " />
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>
